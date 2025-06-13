@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Handle Verifier</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 20px; }
+    form { display: flex; gap: 12px; flex-wrap: wrap; }
+    #result { margin-top: 16px; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<form id="verifyForm">
+  <select name="channel">
+    <option value="telegram">Telegram</option>
+    <option value="x">X</option>
+  </select>
+
+  <input type="text" name="username" placeholder="@handle" required>
+
+  <button type="submit">Verify</button>
+</form>
+
+<p id="result" hidden></p>
+
+<script>
+const WHITELIST = {
+  telegram: ['@nickisbuilding', '@scottwilsonjr', '@ranktradinghk'],
+  x: ['@nickisbuilding', '@scottwilsonjr', '@ranktrading'],
+};
+
+const f = document.getElementById('verifyForm');
+const out = document.getElementById('result');
+
+f.addEventListener('submit', e => {
+  e.preventDefault();
+
+  const channel = f.channel.value.toLowerCase();
+  let user = f.username.value.trim();
+  if (user && user[0] !== '@') user = '@' + user;
+
+  const ok = WHITELIST[channel]?.some(
+      u => u.toLowerCase() === user.toLowerCase()
+  );
+
+  out.hidden = false;
+  out.textContent = ok
+      ? '✅ Verified — welcome aboard.'
+      : '❌ Not on the list.';
+  out.style.color = ok ? 'green' : 'red';
+});
+</script>
+
+</body>
+</html>
+
